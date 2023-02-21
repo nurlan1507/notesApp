@@ -7,7 +7,9 @@ import androidx.room.RoomDatabase
 import com.plcoding.cleanarchitecturenoteapp.feature_note.data.data_source.NoteDao
 import com.plcoding.cleanarchitecturenoteapp.feature_note.data.data_source.NoteDatabase
 import com.plcoding.cleanarchitecturenoteapp.feature_note.data.repository.NoteRepositoryImpl
+import com.plcoding.cleanarchitecturenoteapp.feature_note.data.repository.QuestionRepositoryImpl
 import com.plcoding.cleanarchitecturenoteapp.feature_note.domain.repository.NoteRepository
+import com.plcoding.cleanarchitecturenoteapp.feature_note.domain.repository.QuestionRepository
 import com.plcoding.cleanarchitecturenoteapp.feature_note.domain.use_cases.*
 import dagger.Module
 import dagger.Provides
@@ -21,23 +23,29 @@ import javax.inject.Singleton
 object AppModule {
     @Provides
     @Singleton
-    fun provideRoomDatabase(app:Application):NoteDatabase{
+    fun provideRoomDatabase(app: Application): NoteDatabase {
         return Room.databaseBuilder(
             app,
             NoteDatabase::class.java,
             NoteDatabase.DATABASE_NAME
-        ).build()
+        ).fallbackToDestructiveMigration().build()
     }
 
     @Provides
     @Singleton
-    fun noteRepository(db:NoteDatabase):NoteRepository{
+    fun noteRepository(db: NoteDatabase): NoteRepository {
         return NoteRepositoryImpl(db.noteDao)
     }
 
     @Provides
     @Singleton
-    fun noteUseCases(noteRepository:NoteRepository):NoteUseCases{
+    fun questionRepository(db: NoteDatabase): QuestionRepository {
+        return QuestionRepositoryImpl(db.questionDao)
+    }
+
+    @Provides
+    @Singleton
+    fun noteUseCases(noteRepository: NoteRepository): NoteUseCases {
         return NoteUseCases(
             GetNotesUseCase(noteRepository),
             DeleteNoteUseCase(noteRepository),
@@ -45,4 +53,6 @@ object AppModule {
             GetNoteUseCase(noteRepository)
         )
     }
+
+
 }

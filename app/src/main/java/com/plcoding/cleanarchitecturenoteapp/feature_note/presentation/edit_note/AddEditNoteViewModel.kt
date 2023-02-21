@@ -27,6 +27,9 @@ class AddEditNoteViewModel @Inject constructor(
     private var _noteContent = mutableStateOf(NoteTextFieldState(hint = "Enter some content"))
     val noteContent : State<NoteTextFieldState> = _noteContent
 
+    private var _pdfState = mutableStateOf(InsertPdfFileState.Inactive)
+    val pdfState:State<InsertPdfFileState> = _pdfState
+
     private var _noteColor  = mutableStateOf<Int>(Note.noteColors.random().toArgb())
     val noteColor: State<Int> = _noteColor
 
@@ -85,6 +88,11 @@ class AddEditNoteViewModel @Inject constructor(
                             )
                         )
                     }
+                }
+            }
+            is AddEditNoteEvent.InsertPDF ->{
+                viewModelScope.launch {
+
                 }
             }
         }
