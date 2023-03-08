@@ -31,6 +31,7 @@ import androidx.navigation.NavController
 import com.plcoding.cleanarchitecturenoteapp.feature_note.domain.model.Note
 import com.plcoding.cleanarchitecturenoteapp.feature_note.presentation.edit_note.components.InsertPdfButton
 import com.plcoding.cleanarchitecturenoteapp.feature_note.presentation.edit_note.components.TransparentHintTextFiend
+import com.plcoding.cleanarchitecturenoteapp.feature_note.presentation.notes.SalamViewModel
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -39,6 +40,7 @@ import kotlinx.coroutines.launch
 fun AddEditNoteScreen(
     navController: NavController,
     noteColor:Int,
+    salamViewModel: SalamViewModel,
     viewModel: AddEditNoteViewModel = hiltViewModel(),
 ){
     val ctx = LocalContext.current
@@ -46,7 +48,7 @@ fun AddEditNoteScreen(
     val contentState = viewModel.noteContent.value
     val scaffoldState = rememberScaffoldState()
 
-
+    val salamState = salamViewModel.salam
 
     val noteBackgroundAnimatable = remember{
         Animatable(
@@ -168,6 +170,7 @@ fun AddEditNoteScreen(
                 isTextArea = true
             )
             Spacer(modifier = Modifier.height(8.dp))
+            Text(modifier = Modifier.height(20.dp), text="ss ${salamState.value}")
             InsertPdfButton(context = ctx , text = "Insert quiz", onClick = {
                 viewModel.onEvent(AddEditNoteEvent.InsertPDF)
             })

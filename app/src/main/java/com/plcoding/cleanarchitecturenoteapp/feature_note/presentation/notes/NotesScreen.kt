@@ -10,6 +10,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Sort
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -26,12 +27,13 @@ import kotlinx.coroutines.launch
 @Composable
 fun NotesScreen(
     navController: NavController,
+    salamViewModel: SalamViewModel,
     viewModel: NotesViewModel = hiltViewModel(),
 ){
     val state = viewModel.state.value
     val scaffoldState = rememberScaffoldState()
     val scope = rememberCoroutineScope()
-    
+    val salamState = salamViewModel.salam
     Scaffold(
         floatingActionButton = {
             FloatingActionButton(
@@ -81,13 +83,16 @@ fun NotesScreen(
                 )
             }
             Spacer(modifier = Modifier.height(16.dp))
+            Text(modifier = Modifier.height(20.dp), text="ss ${salamState.value}")
+            TextField(value = "", onValueChange ={it->salamViewModel.change(it)} )
             LazyColumn(modifier = Modifier.fillMaxSize()){
               items(state.notes){note->
                   NoteItem(
                       note = note,
-                      modifier = Modifier.fillMaxWidth()
+                      modifier = Modifier
+                          .fillMaxWidth()
                           .clickable {
-                                navController.navigate(Screen.AddEditNoteScreen.route + "?noteId=${note.id}&noteColor=${note.color}")
+                              navController.navigate(Screen.AddEditNoteScreen.route + "?noteId=${note.id}&noteColor=${note.color}")
                           },
                       onDelete = {
                           viewModel.onEvent(NotesEvent.Delete(note=note))
